@@ -3,8 +3,11 @@
 ## Section 1: Intro
 
 1. Feature selection methods:
+
 	a. Filter methods
+
 	b. Wrapper methods
+	
 	c. Embedded methods
 
 ## Section 2: Feature Selection
