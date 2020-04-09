@@ -1,6 +1,6 @@
 # Feature Selection for Machine Learning
 
-Udemy 
+**Udemy** <br/>
 [Soledad Galli](https://www.udemy.com/user/soledad-galli/)
 
 ## Section 1: Intro
