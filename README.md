@@ -4,20 +4,20 @@
 
 1. Feature selection methods:
 
-	a. Filter methods
-		a.1. Basics:
-			+ constant
-			+ Quasi-constant
-			+ Duplicated
-		a.2. Correlation
-		a.3. Statiscal measures
-			+ Fisher score
-			+ Univariate methods
-			+ Mutual information
+	a. Filter methods<br/>
+		a.1. Basics:<br/>
+			+ constant<br/>
+			+ Quasi-constant<br/>
+			+ Duplicated<br/>
+		a.2. Correlation<br/>
+		a.3. Statiscal measures<br/>
+			+ Fisher score<br/>
+			+ Univariate methods<br/>
+			+ Mutual information<br/>
 
-	b. Wrapper methods
+	b. Wrapper methods<br/>
 	
-	c. Embedded methods
+	c. Embedded methods<br/>
 
 ## Section 2: Feature Selection
 
