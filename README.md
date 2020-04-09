@@ -17,9 +17,33 @@
 - Univariate methods
 - Mutual information
 
+4. Alternative filter methods
+
 #### Wrapper methods
+1. Step forward selection
+2. Step backward selection
+3. Exhaustive search
+4. Feature Shuffling
 
 #### Embedded methods
+1. LASSO
+2. Decision tree derived importance
+3. Regression coefficients
+
+#### Hybrid methods
+1. Recursive feature elimination
+
+### Course requirements
+
+#### Machine Learning
+1. Linear and Logistic regression
+2. Random Forest Trees
+3. Gradient Boosted Trees (XGB)
+4. Diagnostics: ROC-AUC, mse
+
+#### References
+1. kaggle
+2. kdd.org/kdd-cup
 
 
 ## Section 2: Feature Selection
