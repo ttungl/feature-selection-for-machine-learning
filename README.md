@@ -1,5 +1,8 @@
 # Feature Selection for Machine Learning
 
+Udemy 
+(Soledad Galli)[https://www.udemy.com/user/soledad-galli/]
+
 ## Section 1: Intro
 
 ### Feature selection methods:
