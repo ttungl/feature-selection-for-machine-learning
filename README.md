@@ -76,8 +76,37 @@
 **Procedure**
 - A feature selection algorithm can be seen as the combination of a search technique for proposing new feature subsets, along with an evaluation measure which scores the different feature subsets.
 	- Computationally expensive.
+		- The feature selection method will search through all the possible subsets of feature combinations that can be obtined from a given dataset, and find the feature combination that produces the best ML model performance.
 	- Different feature subsets render optimal performance for different ML algorithms.
-		- Different methods of feature selection.
+		- There is not only one subset of features but many subset of optimal features depending on the machine learning algorithms that we intend to use.
+		- Different methods of feature selection have been developed to try and accomodate as many limitations.
+- **Feature selection algorithm** can be divided into three main categories, including filter methods, wrapper methods, embedded methods.
+	- *Filter methods*:
+		- Rely on the characteristics of the data (feature characteristics)
+		- Do not use ML algorithms.
+			- These methods only evaluate the features, and make a selection based on the feature characteristics.
+		- Model agnostic
+		- Tend to be less computationally expensive.
+		- Usually give lower prediction performance than wrapper or embedded methods.
+		- Are very well-suited for a quick screen and removal of irrelevant features.
+	- *Wrapper methods*:
+		- Use  predictive ML models to score the feature subset.
+		- Train a new model on each feature subset, then select the subset of variables that produces the highest performing algorithm. Therefore, it will build simpler ML models at each round of feature selection.
+			- Downside: 
+				- Tend to be very computationally expensive.
+				- They may not produce the best feature combination for a different ML model.
+			- Upside: Usually provide the best performing feature subset for a give ML algorithm.
+		- In practice, if we used tree-based/derived methods to select the feature with wrapper methods, ie. gradient boost trees to select features, the optimal set of features selected with this algorithm most likely will produce a good performance for other tree-based algorithms like random forest. However, this set of features may not provide the best performance for logistic regression. Therefore, we need to keep in mind that when using wrapper methods, we also intend to choose which models we'll build with the selected features.
+
+	- *Embedded methods*:
+		- Performance feature selection as part of the model construction process.
+		- Consider the interaction between features and models.
+		- They are less computationally expensive than wrapper methods, because they fit the ML model only once.
+
+
+		
+		
+
 
 
 ## Section 3: Filter methods | Basics
