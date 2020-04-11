@@ -89,6 +89,12 @@
 		- Tend to be less computationally expensive.
 		- Usually give lower prediction performance than wrapper or embedded methods.
 		- Are very well-suited for a quick screen and removal of irrelevant features.
+
+		- Methods:
+			- Variance
+			- Correlation
+			- Univariate selection
+
 	- *Wrapper methods*:
 		- Use  predictive ML models to score the feature subset.
 		- Train a new model on each feature subset, then select the subset of variables that produces the highest performing algorithm. Therefore, it will build simpler ML models at each round of feature selection.
@@ -98,16 +104,19 @@
 			- Upside: Usually provide the best performing feature subset for a give ML algorithm.
 		- In practice, if we used tree-based/derived methods to select the feature with wrapper methods, ie. gradient boost trees to select features, the optimal set of features selected with this algorithm most likely will produce a good performance for other tree-based algorithms like random forest. However, this set of features may not provide the best performance for logistic regression. Therefore, we need to keep in mind that when using wrapper methods, we also intend to choose which models we'll build with the selected features.
 
+		- Methods:
+			- Forward selection
+			- Backward selection
+			- Exhausive search
+
 	- *Embedded methods*:
 		- Performance feature selection as part of the model construction process.
+			- By combining feature selection with classifier or regressor construction, these methods have the advantages of wrapper methods.
 		- Consider the interaction between features and models.
 		- They are less computationally expensive than wrapper methods, because they fit the ML model only once.
-
-
-		
-		
-
-
+		- Methods:
+			- LASSO for linear regression model.
+			- Tree importance
 
 ## Section 3: Filter methods | Basics
 
