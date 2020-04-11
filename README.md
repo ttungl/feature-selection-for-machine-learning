@@ -114,7 +114,7 @@
 		- They are less computationally expensive than wrapper methods, because they fit the ML model only once.
 		- **Methods**:
 			- LASSO for linear regression model.
-			- Tree importance
+			- Tree importance 
 
 ## Section 3: Filter methods | Basics
 
