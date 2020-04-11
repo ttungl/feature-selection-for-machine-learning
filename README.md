@@ -89,7 +89,6 @@
 		- Tend to be less computationally expensive.
 		- Usually give lower prediction performance than wrapper or embedded methods.
 		- Are very well-suited for a quick screen and removal of irrelevant features.
-
 		- **Methods**:
 			- Variance
 			- Correlation
@@ -103,7 +102,6 @@
 				- They may not produce the best feature combination for a different ML model.
 			- Upside: Usually provide the best performing feature subset for a give ML algorithm.
 		- In practice, if we used tree-based/derived methods to select the feature with wrapper methods, ie. gradient boost trees to select features, the optimal set of features selected with this algorithm most likely will produce a good performance for other tree-based algorithms like random forest. However, this set of features may not provide the best performance for logistic regression. Therefore, we need to keep in mind that when using wrapper methods, we also intend to choose which models we'll build with the selected features.
-
 		- **Methods**:
 			- Forward selection
 			- Backward selection
