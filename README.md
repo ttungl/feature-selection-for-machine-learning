@@ -58,6 +58,18 @@
 
 ## Section 2: Feature Selection
 
+### Definition
+*Feature selection* is the process of selecting a subset of relevant features (variables, predictors) for use in machine learning model building.
+
+*Why should we select features?*
+- Simple models are easier to interpret.
+- Shorter training times.
+- Enhanced generalization by reducing overfitting.
+- Easier to implement by software developer.
+- Reduced risk of data error during model use.
+- Variable redundancy.
+- Bad learning behaviour in high dimensional spaces.
+
 
 
 ## Section 3: Filter methods | Basics
