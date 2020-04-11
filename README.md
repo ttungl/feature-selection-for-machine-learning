@@ -9,7 +9,7 @@
 
 #### Filter methods
 1. *Basics*
-- constant
+- Constant
 - Quasi-constant
 - Duplicated
 
@@ -68,8 +68,16 @@
 - Easier to implement by software developer.
 - Reduced risk of data error during model use.
 - Variable redundancy.
-- Bad learning behaviour in high dimensional spaces.
+	- As the features within dataset are highly correlated, which means that they have essentially the same information, so they are redundant. We can keep one and remove the rest without losing information.
 
+- Bad learning behaviour in high dimensional spaces.
+	- ML algorithms, specifically tree-based algorithms, are favored by reduced feature spaces. This means, high dimension causes worst performance in tree-based methods and so reducing the feature space helps build more robust and predictive models.
+
+*Procedure*
+- A feature selection algorithm can be seen as the combination of a search technique for proposing new feature subsets, along with an evaluation measure which scores the different feature subsets.
+	- Computationally expensive.
+	- Different feature subsets render optimal performance for different ML algorithms.
+		- Different methods of feature selection.
 
 
 ## Section 3: Filter methods | Basics
