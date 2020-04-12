@@ -190,15 +190,42 @@
 
 - This is the first step for any ML modeling practice. They provide quick and easy sanity checks for the variables that will immediately allow you to reduce the feature space and get rid of unuseful features. Note that the duplicated features may arise after one-hot encoding of categorical variables. There are many datasets that present constant, quasi-constant, duplicated features and if we remove them, it will make the ML modeling much simpler. 
 
-#### Constant features: 
+#### Constant features 
 - Constant features are those that show only one value for all the observations in the dataset (same value for that variable).
+	- Using variance threshold from sklearn.
+		- Simple baseline approach to feature selection where it removes all features which variance doesn't meet some threshold. By default, it removes all zero-variance features, i.e. features that have the same value in all observations.
+	- Coding ourselves.
+		- Basically check if standard deviation of the feature values is zero.
+	- Removing constant features for categorical variables.
+		- Check if unique value of the feature values == 1.
 
 
 #### Quasi-constant features
 - Quasi-constant features are those where a single value is shared by the major observations in the dataset. It's varied but typically, more than 95-99 percent of the observations will present the same value in the dataset. It's up to you to decide the cutoff to call the feature quasi-constant.
+	- Using variance threshold from sklearn. If threshold is 0.01, meaning the method will drop the feature if 99% of the observations represent the same value in the dataset.  
 
 #### Duplicated features
 - Duplicated features are those that in essence are the same. When two features in the dataset show the same value for all the observations, they are in essence the same feature. So the information of one in two is redundant. Keep in mind that duplicated features may arise after some process that generates new features from existing one like one-hot encoding, these variables can end up with several identical binary features. Therefore, checking duplicated features provide a good way to get rid of them.
+	- **Small dataset**
+		- Pandas has the function `duplicated` that evaluates if the dataframe contains duplicated rows. So we can use this function for checking duplicated columns if we transpose the dataframe where the columns are now rows, and leverage this function to identify those duplicated rows, which actually are duplicated columns. 
+			- ` # transposed dataframe
+				data_t = X_train.T
+				# get duplicated dataframe
+				duplicated_features = data_t[data_t.duplicated()]
+				# get duplicated columns name
+				duplicateFeatsIndex = duplicated_features.index.values
+				# get unique dataframe without duplication and transpose back to the variables as the columns, keep first of the sets of duplicated variables.
+				data_unique = data_t.drop_duplicates(keep='first').T
+				`
+	- **Big dataset**
+		- Transposing a dataframe is memory-intensive, therefore, we use the alternative loop to find duplicated columns in big datasets.
+		-  
+
+
+
+
+
+
 
 ### Review
 
