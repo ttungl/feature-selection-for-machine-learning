@@ -126,6 +126,40 @@
 			- Backward selection
 			- Exhausive search
 
+		- **Details**:
+			- Evaluate the quality of features in the light of a specific ML algorithm.
+			- Evaluate subsets of variables simultaneously.
+			- *Advantages:*
+				- Detect interactions between variables.
+				- Find the optimal feature subset for the desired classifier.
+		- Procedure:
+			- Search for a subset of features
+			- Build a machine learning model on the selected subset of features.
+			- Evaluate model performance.
+			- Repeat
+		- Follow-up:
+			- How to search for the subset of features?
+				- Forward feature selection: adds 1 feature at a time in each iteration, the feature which best improves the ML model performance until a predefined criterion is met.
+				
+				- Backward feature elimination: removes 1 feature at a time. We start with all features, and remove the least significant feature at each iteration until a criteria is met.
+
+				- Exhaustive feature search: searches across all possible feature combinations. It aims to find the best performing features subset. It builds all possible combinations of features from 1 to `n`, where `n` is the number of features, and it creates a ML model for each of these combinations, and finally, it selects the combination of features that performs the best.
+					- Greedy algorithms
+						- Computationally expensive.
+						- Impractical. 
+
+			- How to stop the search?
+				- Performance not increase
+				- Performance not decrease
+				- Predefined number of features is reached.
+				- *Notes:* stopping criteria are somewhat arbitrary and to be determined by user.
+
+		- Summary:
+			- Better predictive accuracy than filter methods.
+			- Best performing feature subset for the predefined classifier
+			- Computationally expensive
+			- Stopping criterion is relatively arbitrary.
+
 	- *Embedded methods*:
 		- Performance feature selection as part of the model construction process.
 			- By combining feature selection with classifier or regressor construction, these methods have the advantages of wrapper methods.
