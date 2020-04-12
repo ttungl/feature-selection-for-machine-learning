@@ -93,6 +93,20 @@
 			- Variance
 			- Correlation
 			- Univariate selection
+				- Two-step procedure:
+					- Rank features according to a certain criteria.
+						- Each feature is ranked independently of the feature space.
+							- Feature scores on various statistical tests:
+								- Chi-square or Fisher score
+								- Univariate parametric tests (anova)
+								- Mutual information
+								- Variance
+									- Constant features
+									- Quasi-constant features
+									
+					- Select the highest ranking features.
+						- May select redundant variables because they don't consider the relationships between features. 
+
 
 	- *Wrapper methods*:
 		- Use  predictive ML models to score the feature subset.
