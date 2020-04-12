@@ -208,7 +208,7 @@
 - Duplicated features are those that in essence are the same. When two features in the dataset show the same value for all the observations, they are in essence the same feature. So the information of one in two is redundant. Keep in mind that duplicated features may arise after some process that generates new features from existing one like one-hot encoding, these variables can end up with several identical binary features. Therefore, checking duplicated features provide a good way to get rid of them.
 	- **Small dataset**
 		- Pandas has the function `duplicated` that evaluates if the dataframe contains duplicated rows. So we can use this function for checking duplicated columns if we transpose the dataframe where the columns are now rows, and leverage this function to identify those duplicated rows, which actually are duplicated columns. 
-			- ` # transposed dataframe
+			- ``` # transposed dataframe
 				data_t = X_train.T
 				# get duplicated dataframe
 				duplicated_features = data_t[data_t.duplicated()]
@@ -216,7 +216,7 @@
 				duplicateFeatsIndex = duplicated_features.index.values
 				# get unique dataframe without duplication and transpose back to the variables as the columns, keep first of the sets of duplicated variables.
 				data_unique = data_t.drop_duplicates(keep='first').T
-				`
+				```
 	- **Big dataset**
 		- Transposing a dataframe is memory-intensive, therefore, we use the alternative loop to find duplicated columns in big datasets.
 		-  
