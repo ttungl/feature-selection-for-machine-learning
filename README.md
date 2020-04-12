@@ -161,13 +161,27 @@
 			- Stopping criterion is relatively arbitrary.
 
 	- *Embedded methods*:
-		- Performance feature selection as part of the model construction process.
+		- Performance feature selection as part of the model construction process or during the modeling algorithm's execution.
 			- By combining feature selection with classifier or regressor construction, these methods have the advantages of wrapper methods.
-		- Consider the interaction between features and models.
-		- They are less computationally expensive than wrapper methods, because they fit the ML model only once.
+		- Consider/detect the interactions between features and models.
+		- They are less computationally expensive and faster than wrapper methods, because they fit the ML model only once. These methods also are more accurate than filter methods.
+		- Find the feature subset for the algorithm being trained.
+
 		- **Methods**:
 			- LASSO for linear regression model.
 			- Tree importance 
+			- Regression coefficients
+
+		- **Procedure**:
+			- Train a ML algorithm
+			- Derive the feature importance
+			- Remove non-important features.
+
+		- Summary:
+			- Better predictive accuracy than filter methods.
+			- Faster than wrapper methods
+			- Render generally good feature subsets for the used algorithm
+			- Constrained to the limitations of the algorithm.
 
 ## Section 3: Filter methods | Basics
 
