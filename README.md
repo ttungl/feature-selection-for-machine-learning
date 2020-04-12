@@ -92,9 +92,9 @@
 		- **Methods**:
 			- Variance
 			- Correlation
-			- Univariate selection
+			- Univariate selection:
 				- Two-step procedure:
-					- Rank features according to a certain criteria.
+					- Rank features according to a certain criteria
 						- Each feature is ranked independently of the feature space.
 							- Feature scores on various statistical tests:
 								- Chi-square or Fisher score
@@ -106,6 +106,11 @@
 									
 					- Select the highest ranking features.
 						- May select redundant variables because they don't consider the relationships between features. 
+			- Multivariate selection:
+				- Handle redundant feature
+				- Scanning for duplicated features
+				- Correlated features
+				- *Notes:* simple yet powerful methods to quickly screen and remove irrelevant and redundant features. First step in feature selection procedures/pipelines.
 
 
 	- *Wrapper methods*:
