@@ -186,6 +186,24 @@
 
 ## Section 3: Filter methods | Basics
 
+### Constant, quasi-constant, duplicated features - Intro
+
+- This is the first step for any ML modeling practice. They provide quick and easy sanity checks for the variables that will immediately allow you to reduce the feature space and get rid of unuseful features. Note that the duplicated features may arise after one-hot encoding of categorical variables. There are many datasets that present constant, quasi-constant, duplicated features and if we remove them, it will make the ML modeling much simpler. 
+
+#### Constant features: 
+- Constant features are those that show only one value for all the observations in the dataset (same value for that variable).
+
+
+#### Quasi-constant features
+- Quasi-constant features are those where a single value is shared by the major observations in the dataset. It's varied but typically, more than 95-99 percent of the observations will present the same value in the dataset. It's up to you to decide the cutoff to call the feature quasi-constant.
+
+#### Duplicated features
+- Duplicated features are those that in essence are the same. When two features in the dataset show the same value for all the observations, they are in essence the same feature. So the information of one in two is redundant. Keep in mind that duplicated features may arise after some process that generates new features from existing one like one-hot encoding, these variables can end up with several identical binary features. Therefore, checking duplicated features provide a good way to get rid of them.
+
+### Review
+
+
+
 ## Section 4: Filter methods | Correlation
 
 ## Section 5: Filter methods | Statistical measures
