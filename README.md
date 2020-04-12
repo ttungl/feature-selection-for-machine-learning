@@ -194,11 +194,19 @@
 - Constant features are those that show only one value for all the observations in the dataset (same value for that variable).
 	- Using variance threshold from sklearn.
 		- Simple baseline approach to feature selection where it removes all features which variance doesn't meet some threshold. By default, it removes all zero-variance features, i.e. features that have the same value in all observations.
+		- VarianceThreshold(threshold=0) 
+		```
+		from sklearn.feature_selection import VarianceThreshold
+		sel = VarianceThreshold(threshold=0)
+		# fit finds the features with zero variance.
+		sel.fit(X_train) 
+		# get_support() method returns which features are retained.
+		retained_features = sel.get_support()
+		```
 	- Coding ourselves.
 		- Basically check if standard deviation of the feature values is zero.
 	- Removing constant features for categorical variables.
 		- Check if unique value of the feature values == 1.
-
 
 #### Quasi-constant features
 - Quasi-constant features are those where a single value is shared by the major observations in the dataset. It's varied but typically, more than 95-99 percent of the observations will present the same value in the dataset. It's up to you to decide the cutoff to call the feature quasi-constant.
