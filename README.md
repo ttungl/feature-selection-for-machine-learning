@@ -220,8 +220,13 @@
 				data_unique = data_t.drop_duplicates(keep='first').T
 				```
 	- **Big dataset**
-		- Transposing a dataframe is memory-intensive, therefore, we use the alternative loop to find duplicated columns in big datasets.
-		-  
+		- Transposing a big dataframe is memory-intensive, therefore, we use the alternative loop to find duplicated columns in big datasets.
+		-  	```
+			for loop of data columns
+				for each column C[i]
+					compare all columns C[i+1:] until the end.
+					if values are equal in comparable columns C[i] and C[i+1] then duplicated columns are found. 
+			```
 
 
 
