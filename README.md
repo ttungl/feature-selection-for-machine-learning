@@ -214,7 +214,8 @@
 				duplicated_features = data_t[data_t.duplicated()]
 				# get duplicated columns name
 				duplicateFeatsIndex = duplicated_features.index.values
-				# get unique dataframe without duplication and transpose back to the variables as the columns, keep first of the sets of duplicated variables.
+				# get unique dataframe without duplication and transpose back to the variables as the columns, 
+				# keep first of the sets of duplicated variables.
 				data_unique = data_t.drop_duplicates(keep='first').T
 				```
 	- **Big dataset**
