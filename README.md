@@ -237,17 +237,13 @@
 						then duplicated columns are found. 
 			```
 
-
-
-
-
-
-
-### Review
-
-
-
 ## Section 4: Filter methods | Correlation
+
+### Correlation
+
+### Basic methods plus correlation pipeline
+
+
 
 ## Section 5: Filter methods | Statistical measures
 
