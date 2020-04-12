@@ -181,7 +181,8 @@
 			- Better predictive accuracy than filter methods.
 			- Faster than wrapper methods
 			- Render generally good feature subsets for the used algorithm
-			- Constrained to the limitations of the algorithm.
+			- Downside:
+				- Constrained to the limitations of the algorithm.
 
 ## Section 3: Filter methods | Basics
 
