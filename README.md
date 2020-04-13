@@ -277,7 +277,7 @@
 
 	- Code review
 		- In practice, feature selection should be done after data preprocessing, so ideally, all the categorical variables are encoded into numbers, and you can assess whether they are correlated with other. So, filtering all numerical variables columns.
-		```
+		```python
 		numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
 		numerical_vars = list(data.select_dtypes(include=numerics).columns)
 		numerical_data = data[numerical_vars]
