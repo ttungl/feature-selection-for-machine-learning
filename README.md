@@ -195,7 +195,7 @@
 	- Using variance threshold from sklearn.
 		- Simple baseline approach to feature selection where it removes all features which variance doesn't meet some threshold. By default, it removes all zero-variance features, i.e. features that have the same value in all observations.
 		- VarianceThreshold(threshold=0) 
-		```
+		```python
 		from sklearn.feature_selection import VarianceThreshold
 		sel = VarianceThreshold(threshold=0)
 		# fit finds the features with zero variance.
@@ -216,7 +216,7 @@
 - Duplicated features are those that in essence are the same. When two features in the dataset show the same value for all the observations, they are in essence the same feature. It introduces duplicated features after performing one-hot encoding of categorical  variables when using several highly cardinal variables. So the information of one in two is redundant. Keep in mind that duplicated features may arise after some process that generates new features from existing one like one-hot encoding, these variables can end up with several identical binary features. Therefore, checking duplicated features provide a good way to get rid of them.
 	- **Small dataset**
 		- Pandas has the function `duplicated` that evaluates if the dataframe contains duplicated rows. So we can use this function for checking duplicated columns if we transpose the dataframe where the columns are now rows, and leverage this function to identify those duplicated rows, which actually are duplicated columns. 
-			- ``` 
+			- ```python
 				# transposed dataframe
 				data_t = X_train.T
 				# get duplicated dataframe
@@ -230,7 +230,7 @@
 	- **Big dataset**
 		- Transposing a big dataframe is memory-intensive, therefore, we use the alternative loop to find duplicated columns in big datasets.
 		- This procedure takes O(n^2). 	
-			```
+			```python
 			for each column C[i] of data columns
 				for each column C[i+1:] until the end.
 					if values are equal in comparable columns C[i] and C[i+1] 
@@ -264,7 +264,7 @@
 #### How to determine correlation
 
 - **Pearson's correlation coefficient**
-	```
+	```python
 	sum((x1 -x1.mean) * (x2 - x2.mean) * (xn - xn.mean)) / var(x1) * var(x2) * var(xn)
 	```  
 	- Pearson's coefficient values vary between [-1,1]
@@ -285,7 +285,7 @@
 
 		- Visualize correlated features.
 			- Correlation matrix, which examines the correlation of all features (for all possible feature combinations and then visualize the correlation matrix).
-			```
+			```python
 			corrmat = X_train.corr()
 			# plot
 			fig, ax = plt.subplots()
@@ -297,7 +297,7 @@
 
 	- **Brute Force approach**: we can select highly correlated features by removing the first feature that is correlated to anything else. 
 
-		```
+		```python
 		def correlation(df, threshold):
 			col_corr = set()
 			corrmat = df.corr()
