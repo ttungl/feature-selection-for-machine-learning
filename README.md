@@ -374,13 +374,6 @@
 		- None of two approaches for removing correlated features are perfect, it's necessary to double check after the processes.
 
 
-
-
-
-### Basic methods plus correlation pipeline
-
-
-
 ## Section 5: Filter methods | Statistical measures
 
 ## Section 6: Wrapper methods
@@ -396,3 +389,13 @@
 ## Section 11: Hybrid feature selection methods
 
 ## Section 12: Final section and next steps
+
+
+
+
+
+
+
+
+
+
