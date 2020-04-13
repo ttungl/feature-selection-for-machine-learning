@@ -370,6 +370,8 @@
 		```
 		- As a result, `v48` appears to the top of this correlated group according to the random forests model, so we should select `v48` and remove the rest of features in this group from the dataset. 
 
+	- Notes:
+		- None of two approaches for removing correlated features are perfect, it's necessary to double check after the processes.
 
 
 
