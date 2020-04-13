@@ -241,6 +241,77 @@
 
 ### Correlation
 
+#### Definition
+- Correlation is a measure of the linear relationship of two or more variables. 
+- Through correlation, we can predict one variable from the other. Good variables are highly correlated with the target.
+- Correlated predictor variables provide redundant information. 
+	- Variables should be correlated with the target but uncorrelated among themselves.
+
+#### Correlation feature selection
+- The central hypothesis is that good feature sets contain features that are highly correlated with the target, yet uncorrelated with each other.
+
+#### Correlation and machine learning
+- Correlated features do not necessarily affect model accuracy by itself, but high dimensionality does.
+- If two features are highly correlated, the second one will add little information over the previous one. So, removing it will help reduce dimension.
+- Correlation affects model interpretability: linear models.
+	- If two variables are correlated, the linear models will fit coefficients to both variables that somehow capture the correlation, therefore, these will be misleading on the true importance of each individual features.
+	- This is also true for ensemble tree models, if two features are correlated, tree methods will assign roughly the same importance to both but half of the importance they would assign if we had only one of the correlated features in the dataset.
+	- Therefore, removing correlated features improves both the machine learning models by making them simpler with less variables and yet similar predictive performance. It also helps the interpretability of the model as it preserves the relationship of the feature with the target by removing the interaction with the correlated variable. 
+
+- Different classifiers show different sensitivity to correlation.
+	- Typically, linear models are more sensitive and tree methods are quite robust to correlate the features.
+
+#### How to determine correlation
+
+- **Pearson's correlation coefficient**
+	```
+	sum((x1 -x1.mean) * (x2 - x2.mean) * (xn - xn.mean)) / var(x1) * var(x2) * var(xn)
+	```  
+	- Pearson's coefficient values vary between [-1,1]
+		- `1` is highly correlated: the more of variable x1, the more of x2.
+		- `-1` is highly anti-correlated: the more of variable x1, the less of x2. 
+
+- **Procedure for correlation selection**
+	- First approach is a Brute force function, that finds correlated features without any further insight.  
+	- Second approach finds groups of correlated features. Often, more than two features are correlated with each other. We can find groups of 3, 4, or more features that are correlated. By identifying these groups, we can select from each group, which feature we want to keep or remove.
+
+	- Code review
+		- In practice, feature selection should be done after data preprocessing, so ideally, all the categorical variables are encoded into numbers, and you can assess whether they are correlated with other. So, filtering all numerical variables columns.
+		```
+		numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+		numerical_vars = list(data.select_dtypes(include=numerics).columns)
+		numerical_data = data[numerical_vars]
+		```
+
+		- Visualize correlated features.
+			- Correlation matrix, which examines the correlation of all features (for all possible feature combinations and then visualize the correlation matrix).
+			```
+			corrmat = X_train.corr()
+			# plot
+			fig, ax = plt.subplots()
+			fig.set_size_inches(11,11)
+			sns.heatmap(corrmat)
+			```
+			- Notes: the white squares are associated with highly correlated features (> 0.8). The diagonal represents the correlation of the feature with itself.
+
+
+	- **Brute Force approach**: we can select highly correlated features by removing the first feature that is correlated to anything else. 
+
+		```
+		def correlation(df, threshold):
+			col_corr = set()
+			corrmat = df.corr()
+			for i in range(len(corrmat.columns)):
+				for j in range(i):
+					# interested in abs coefficient values
+					if abs(corrmat.iloc[i, j]) > threshold:
+						col_corr.add(corrmat.columns[i]) 
+			return col_corr
+		```
+
+
+
+
 ### Basic methods plus correlation pipeline
 
 
