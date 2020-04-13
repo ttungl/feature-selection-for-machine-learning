@@ -376,6 +376,64 @@
 
 ## Section 5: Filter methods | Statistical measures
 
+### Statistical and ranking methods
+
+1. Information Gain
+2. Fisher score
+3. Univariate tests
+4. Univariate ROC-AUC/RMSE
+
+#### Two steps:
+- Rank features based on certain criteria/metrics.
+	- This is the statistical test, ranks the features based on certain criteria. Each feature is ranked independently of the other features based on their interaction or relationship with the target.
+- Select features with highest rankings.
+	- The feature with the highest rankings are chosen to be in the classification or regression models. 
+	- How many of the highest ranking features to select is arbitrary and usually be limited by the user.
+- Take-aways:
+	- Pros: Fast
+	- Cons: Doesn't foresee feature redundancy
+		- You would have to screen for duplicated and correlated features in previous steps. 
+		- Also, these selection procedures do not foresee feature interaction. This means, if one feature in isolation is `not a good predictor`, but it's when combined with the second feature, these filter methods will not see that and will remove features on an individual assessment basis.
+		- Each feature is assessed against the target, individually, therefore, it doesn't foresee feature redundancy. So, we see the importance of using these methods in combination with the others to evaluate features all together.
+
+### Mutual information (Information Gain)
+- Measures the mutual dependence of two variables.
+- Determines how similar the joint distribution p(X,Y) is to the products of individual distributions p(X)p(Y).
+- If X and Y are independent, their mutual information is zero.
+- If X is deterministic of Y, the mutual information is the uncertainty contained in Y or X alone. In other words, this is the entropy of Y or the entropy of X. 
+	```python
+	mutual information = sum{i,y} P(xi, yj) * log(P(xi,yj)/P(xi)*P(yj))
+	```
+
+### Fisher Score
+- Measures the dependence of two variables.
+- Suited for `categorical variables`.
+- `Target` should be `binary`.
+- Variable values should be `non-negative`, and typically `boolean`, `frequencies`, `counts`.
+- It compares observed distribution of class among the different labels against the expected one, would there be no labels.
+
+### Univariate tests
+- Measures the dependence of two variables => ANOVA
+	- ANOVA compares the distribution of the variable when the target is `1` versus the distribution of the variable where the target is `0`. 
+	- ANOVA assumes:
+		- `linear relationship` between variable and target
+		- `variables` are `normally distributed`.
+		- `Sensitive` to sample size, and in big datasets, most of the features will end up being significant, this is, with p values below 0.05. These small p-values indicate that the distribution differ where the target is 1 or 0. However, the difference between these distributions might be trivial. Therefore, the important thing when using this method is to compare the p-values among different features rather than pay attention to the p-value itself. This means, the method may be a good indication to compare the relative importance of the different features but not the intrinsic importance of each feature respect to the target, because these will be inflated by the sample size.  
+- Suited for `continuous variables`.
+- Requires a `binary target`
+	- Sklearn extends the test to continuous targets with a correlation trick.
+
+### Univariate ROC-AUC/RMSE
+- Measures the dependence of two variables => using Machine Learning to evaluate the dependency.
+- Suited for all types of variables and targets.
+- Makes no assumption on the distribution of the variables. 
+- **Procedure**
+	- Builds decision tree using a single variable and the target.
+	- Ranks the features according to the model roc-auc or rmse.
+	- Selects the features with the highest machine learning metrics.
+		
+	- Notes: It is perhaps the most powerful but it also has the weakness that it does not foresee feature redundancy. In an extreme example, duplicated features will show the same roc-auc and therefore both will be kept. Where should we put the threshold to select or remove features when using this method? roc-auc = 0.5 means random, therefore, all features with roc-auc that equal to 0.5 could be removed. We also want to remove those features with a low roc-auc the values for example 0.55. For the RMSE or MSE, you could select the cut off above the mean cut off of all the features. Sklean implements the default cutoff for feature selection.
+
 ## Section 6: Wrapper methods
 
 ## Section 7: Embedded methods | Lasso regulization
@@ -385,6 +443,16 @@
 ## Section 9: Embedded methods | Trees
 
 ## Section 10: Reading resources
+
+- [Feature Selection for Classification: A Review, Tang et al](https://web.archive.org/web/20160314145552/http://www.public.asu.edu/~jtang20/publication/feature_selection_for_classification.pdf)
+- [An Introduction to Variable and Feature Selection, Guyon and Elisseeff, 2003.](http://www.jmlr.org/papers/volume3/guyon03a/guyon03a.pdf)
+- [A review of feature selection methods with applications, Jovic et al](https://pdfs.semanticscholar.org/3130/5b131a69fc2a8980698e2ccae5a701d9cae8.pdf)
+- [Least angle and ℓ 1 penalized regression: A review, Hesterberg et al.](https://projecteuclid.org/download/pdfview_1/euclid.ssu/1211317636)
+- [Chapter 7: Feature Selection](https://www.cs.cmu.edu/~kdeng/thesis/feature.pdf)
+- [Correlation Based Feature Selection for Machine Learning. Thesis](https://www.cs.waikato.ac.nz/~mhall/thesis.pdf)
+- [Data Preprocessing for Supervised Learning. Kotsiantis et al.](https://www.researchgate.net/publication/228084519_Data_Preprocessing_for_Supervised_Learning?enrichId=rgreq-4a7b75a2b9198bae2d92c556e25c08eb-XXX&enrichSource=Y292ZXJQYWdlOzIyODA4NDUxOTtBUzoxMDQwMTY1NDk3Nzc0MDlAMTQwMTgxMDg4NjgxMQ%3D%3D&el=1_x_3&_esc=publicationCoverPdf)
+- [The 2009 Knowledge Discovery in Data Competition (KDD Cup 2009) Challenges in Machine Learning.](http://www.mtome.com/Publications/CiML/CiML-v3-book.pdf)
+- [Blog: Machine Learning Explained: Regularisation](https://www.r-bloggers.com/machine-learning-explained-regularization/)
 
 ## Section 11: Hybrid feature selection methods
 
