@@ -308,6 +308,43 @@
 						col_corr.add(corrmat.columns[i]) 
 			return col_corr
 		```
+		
+		- Then the set of correlated features in `col_corr` are highly correlated with other features in the training set. Removing these features will drop very little of your ML models performance.
+
+		```python
+		corr_feats = correlation(X_train, 0.8)
+		X_train.drop(labels=corr_feats, axis=1, inplace=True)
+		X_test.drop(labels=corr_feats, axis=1, inplace=True)
+		```
+
+	- **Second approach**: identifies groups of highly correlated features. Then we can make further investigation within these groups to decide which feature we can keep or remove.
+		- Build a dataframe with the correlation between features. Note that the absolute value of the correlation coefficient is important and not the sign.
+		```python
+		corrmat = X_train.corr()
+		corrmat = corrmat.abs().unstack() # absolute value of corr coef.
+		corrmat = corrmat.sort_values(ascending=False)
+		corrmat = corrmat[(corrmat >=0.8) & (corrmat < 1)]
+		corrmat = pd.DataFrame(corrmat).reset_index()
+		corrmat.columns = ['feat1', 'feat2', 'corr']
+		```
+		- Then we find groups of correlated features.
+		```python
+		grouped_feat = []
+		corr_groups = []
+		for feat in corrmat.feat1.unique():
+			if feat not in grouped_feat:
+				# find all feats correlated to a single feat.
+				corr_block = corrmat[corrmat.feat1 == feat]
+				grouped_feat += list(corr_block.feat2.unique()) + [feat]
+				# append the block of geats to the list
+				corr_groups.append(corr_block)
+		
+		# found 32 correlated groups [corr_groups]
+		# out of 112 total feats in X_train.
+		```
+
+
+
 
 
 
