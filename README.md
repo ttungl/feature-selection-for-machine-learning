@@ -353,8 +353,7 @@
 		``` 
 		- We get the feature importance attributed by the RF model.
 		```python
-		importance = pd.concat([pd.Series(feats),
-								pd.Series(rf_clf.feature_importances_)], axis=1)
+		importance = pd.concat([pd.Series(feats), pd.Series(rf_clf.feature_importances_)], axis=1)
 		importance.columns = ['feature', 'importance']
 		importance.sort_values(by='importance', ascending=False)
 		
