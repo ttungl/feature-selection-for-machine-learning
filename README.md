@@ -321,7 +321,7 @@
 		- Build a dataframe with the correlation between features. Note that the absolute value of the correlation coefficient is important and not the sign.
 		```python
 		corrmat = X_train.corr()
-		corrmat = corrmat.abs().unstack() # absolute value of corr coef.
+		corrmat = corrmat.abs().unstack() # absolute value of corr coef. # series.
 		corrmat = corrmat.sort_values(ascending=False)
 		corrmat = corrmat[(corrmat >=0.8) & (corrmat < 1)]
 		corrmat = pd.DataFrame(corrmat).reset_index()
@@ -336,13 +336,40 @@
 				# find all feats correlated to a single feat.
 				corr_block = corrmat[corrmat.feat1 == feat]
 				grouped_feat += list(corr_block.feat2.unique()) + [feat]
-				# append the block of geats to the list
+				# append the block of feats to the list
 				corr_groups.append(corr_block)
 		
 		# found 32 correlated groups [corr_groups]
 		# out of 112 total feats in X_train.
 		```
 
+		- Alternatively, we can build a ML algorithm using all the features from the corr_groups and select the predictive one.
+		```python
+		from sklearn.ensemble import RandomForestClassifier
+		group = corr_groups[2]
+		feats = list(group.feat2.unique()) + ['v17']
+		rf_clf = RandomForestClassifier(n_estimators=200, random_state=39, max_depth=4)
+		rf_clf.fit(X_train[feats].fillna(0), y_train)
+		``` 
+		- We get the feature importance attributed by the RF model.
+		```python
+		importance = pd.concat([pd.Series(feats),
+								pd.Series(rf_clf.feature_importances_)], axis=1)
+		importance.columns = ['feature', 'importance']
+		importance.sort_values(by='importance', ascending=False)
+		
+		# output:
+		feature	importance
+		2	v48	0.173981
+		3	v93	0.154484
+		6	v101	0.129764
+		1	v64	0.118110
+		7	v17	0.117571
+		4	v106	0.113958
+		0	v76	0.108071
+		5	v44	0.084062
+		```
+		- As a result, `v48` appears to the top of this correlated group according to the random forests model, so we should select `v48` and remove the rest of features in this group from the dataset. 
 
 
 
