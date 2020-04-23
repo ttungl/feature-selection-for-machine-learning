@@ -397,6 +397,8 @@
 		- Each feature is assessed against the target, individually, therefore, it doesn't foresee feature redundancy. So, we see the importance of using these methods in combination with the others to evaluate features all together.
 
 ### Mutual information (Information Gain)
+- Definition:
+	- Mutual information measures how much information the presence/absence of a feature contributes to making the correct prediction on Y.
 - Measures the mutual dependence of two variables.
 - Determines how similar the joint distribution p(X,Y) is to the products of individual distributions p(X)p(Y).
 - If X and Y are independent, their mutual information is zero.
@@ -405,12 +407,68 @@
 	mutual information = sum{i,y} P(xi, yj) * log(P(xi,yj)/P(xi)*P(yj))
 	```
 
-### Fisher Score
+- **How to select features** based on mutual information using `sklearn.feature_selection` on a regression `mutual_info_regression` and classification problem `mutual_info_classif`, along with `SelectKBest, SelectPercentile`. 
+	- In practice, feature selection should be done after data preprocessing. Ideally, all the categorical variables are encoded into numbers, and you can assess how deterministic they are of the target.
+		```python
+		numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+		numerical_vars = list(data.select_dtypes(include=numerics).columns)
+		num_data = data[numerical_vars]
+		```
+	- Calculate the mutual information between the variables and the target, this returns the mutual information value of each feature. The smaller the value, the less information the feature has about the target.
+		```python
+		## used bnp-paribas dataset.
+		# fill null values
+		mi = mutual_info_classif(X_train.fillna(0), y_train)
+		# add var names and order the features
+		mi = pd.Series(mi)
+		mi.index = X_train.columns # add var names
+		mi.sort_values(ascending=False) # sorting
+		# top k=10 features
+		sel = SelectKBest(mutual_info_classif, k=10).fit(X_train.fillna(0), y_train)
+		X_train.columns[sel.get_support()]
+		### output: ['v10', 'v12', 'v14', 'v21', 'v33', 'v34', 'v50', 'v62', 'v114', 'v129']
+		```
+
+		- *Notes*: not use mutual information in any projects but there is some value in the method for reference. 
+
+### Fisher Score (chi-square implementation)
 - Measures the dependence of two variables.
 - Suited for `categorical variables`.
 - `Target` should be `binary`.
 - Variable values should be `non-negative`, and typically `boolean`, `frequencies`, `counts`.
 - It compares observed distribution of class among the different labels against the expected one, would there be no labels.
+
+- Fisher score computes chi-squared stats between each non-negative feature and class. 
+	- This score should be used to evaluate categorical variables in a classification problem.
+	- It compares the observed distribution of the different classes of target Y among the different categories of the feature, against the expected distribution of the target classes, regardless of the feature categories. 
+
+- **How it works**:
+	```python
+	## use titanic dataset
+	# convert categorical variables in `Embarked`, `Sex` into numbers.
+	data['Sex'] = np.where(data.Sex=='male',1,0)
+	ordinal_label = {k : i for i, k in enumerate(data['Embarked'].unique(), 0)}
+	data['Embarked'] = data['Embarked'].map(ordinal_label)
+
+	## calculate the chi-square (chi2) p_value between each of the variables and the target.
+	## It returns two arrays, 
+	## one contains the F-Scores which are then evaluated against the chi-square (chi2) distribution to obtain the p-value.
+	## the second array are p-values.
+	f_score = chi2(X_train.fillna(0), y_train)
+	p_values = pd.Series(f_score[1])
+	p_values.index = X_train.columns
+	p_values.sort_values(ascending=False)
+	### output
+		Embarked    0.000580
+		Pclass      0.000003
+		Sex              NaN
+	```
+	- For Fisher score, the smaller the p-value, the more significant the feature is to predict the target (Survival) in titanic dataset.
+	Therefore, from above result, `Sex` is the most important feature, then `Pclass`, and then `Embarked`.
+
+- **Notes**:
+	- When using Fisher score or univariate selection methods in very big datasets, most of the features will show a small p-value, and therefore, it looks like they are highly predictive. This is in fact an effect of the sample size, so `care` should be taken when selecting features using these procedures. An ultra tiny p_value does not highlight an *ultra-important feature*, it rather *indicates that the dataset contains too many samples*. 
+
 
 ### Univariate tests
 - Measures the dependence of two variables => ANOVA
@@ -422,6 +480,8 @@
 - Suited for `continuous variables`.
 - Requires a `binary target`
 	- Sklearn extends the test to continuous targets with a correlation trick.
+
+
 
 ### Univariate ROC-AUC/RMSE
 - Measures the dependence of two variables => using Machine Learning to evaluate the dependency.
@@ -456,7 +516,7 @@
 
 ## Section 11: Hybrid feature selection methods
 
-## Section 12: Final section and next steps
+
 
 
 
