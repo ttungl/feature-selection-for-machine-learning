@@ -482,12 +482,65 @@
 	- Sklearn extends the test to continuous targets with a correlation trick.
 
 - Univariate feature selection works by selecting the best features based on univariate statistical tests (ANOVA). The methods based on F-test estimate the degree of linear dependency between two random variables. They assume that:
-	- A linear relationship between the feature and the target. 
-	- The variables follow a Gaussian distribution (aka normal distribution).
+	- A `linear relationship` between the `feature` and the `target`. 
+	- The variables follow a `Gaussian distribution` (aka normal distribution).
 
 - Note that these assumptions may not always be the case for the variables in your dataset, so if looking to implement these procedure, you'd need to corroborate these assumptions.
 
-- Reminder, in practice, feature selection should be done after data pre-processing, meaning all the categorical variables are encoded into numbers, and then you can assess how deterministic they are of the target. 
+- Reminder, in practice, feature selection should be done after data pre-processing, meaning all the categorical variables are encoded into numbers, and then you can assess how deterministic they are of the target.
+
+- **Important**: It's a good practice to select the features by examining on the training set to avoid overfit.
+
+- Use BNP dataset for classification demo.
+
+	```python
+		X_train, X_test, y_train, y_test = train_test_split(
+			data.drop(labels=['target','ID'], axis=1),
+			data['target'],
+			test_size=0.3,
+			random_state=0)
+
+		# calculate the univariate statistical measure between each of the variables and the target, it's similar to chi-square, the output is the array of `f-scores` and an array of `p-values` which are the ones we will compare.
+
+		univariate = f_classif(X_train.fillna(0), y_train)
+		univariate = pd.Series(univariate[1]) # p-value
+		univariate.index = X_train.columns
+		univariate.sort_values(ascending=False, inplace=True)
+
+	``` 
+	- Reminder, the lower the p-value, the most predictive the feature is in principle. There are a few features that do not seem to have predictive power according to the tests, which are those values on the left with p-values above 0.05 (rejected). Those features with p-value > 0.05 are not important. However, `keep in mind that this test assumes a linear relationship, so it might also be the case that the feature is related to the target bit not in a linear manner`.
+
+	- In big datasets, it's not unusual that the p-values of the different features are really small. This does not indicate much about the relevance of the feature to the target though. Mostly, it indicates that it's a big dataset.
+
+	```python
+	# select top 10th percentile or top 10, 20 features by using ANOVA in combination with `SelectKBest` or `SelectPercentile` from sklearn.
+
+	sel = SelectKBest(f_classif, k=10).fit(X_train.fillna(0), y_train)
+	X_train.columns[sel.get_support()]
+	X_train = sel.transform(X_train.fillna(0))
+	```
+
+- Use HousePrice dataset for regression demo.
+	```python
+	# split train test
+	# get numerical variables
+	univariate = f_regression(X_train.fillna(0), y_train)
+	univariate = pd.Series(univariate[1]) # p-value
+	univariate.index = X_train.columns
+	univariate.sort_values(ascending=False, inplace=True)
+	```
+
+	- **Observations**:
+		- A lot of features appear to the left with `p-values above 0.05`, which are candidates to be rejected. This means that `those features do not statistically significantly discriminate the target.`
+
+	```python
+	# select top 10 percentile
+	sel = SelectPercentile(f_regression, percentile=10).fit(X_train.fillna(0), y_train)
+	X_train.columns[sel.get_support()]
+	X_train = sel.transform(X_train.fillna(0))
+	```
+**Take-away notes**: Rarely use these methods to select features. Do use them when investigating the relationship of specific variables with the target in custom problems that do not necessarily come in machine learning model building.
+
 
 
 ### Univariate ROC-AUC/RMSE
