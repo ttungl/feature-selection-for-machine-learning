@@ -481,6 +481,13 @@
 - Requires a `binary target`
 	- Sklearn extends the test to continuous targets with a correlation trick.
 
+- Univariate feature selection works by selecting the best features based on univariate statistical tests (ANOVA). The methods based on F-test estimate the degree of linear dependency between two random variables. They assume that:
+	- A linear relationship between the feature and the target. 
+	- The variables follow a Gaussian distribution (aka normal distribution).
+
+- Note that these assumptions may not always be the case for the variables in your dataset, so if looking to implement these procedure, you'd need to corroborate these assumptions.
+
+- Reminder, in practice, feature selection should be done after data pre-processing, meaning all the categorical variables are encoded into numbers, and then you can assess how deterministic they are of the target. 
 
 
 ### Univariate ROC-AUC/RMSE
