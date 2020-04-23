@@ -494,18 +494,21 @@
 - Use BNP dataset for classification demo.
 
 	```python
-		X_train, X_test, y_train, y_test = train_test_split(
-			data.drop(labels=['target','ID'], axis=1),
-			data['target'],
-			test_size=0.3,
-			random_state=0)
+	X_train, X_test, y_train, y_test = train_test_split(
+		data.drop(labels=['target','ID'], axis=1),
+		data['target'],
+		test_size=0.3,
+		random_state=0)
 
-		# calculate the univariate statistical measure between each of the variables and the target, it's similar to chi-square, the output is the array of `f-scores` and an array of `p-values` which are the ones we will compare.
+	# calculate the univariate statistical measure between each of 
+	# the variables and the target, it's similar to chi-square, 
+	# the output is the array of `f-scores` and 
+	# an array of `p-values` which are the ones we will compare.
 
-		univariate = f_classif(X_train.fillna(0), y_train)
-		univariate = pd.Series(univariate[1]) # p-value
-		univariate.index = X_train.columns
-		univariate.sort_values(ascending=False, inplace=True)
+	univariate = f_classif(X_train.fillna(0), y_train)
+	univariate = pd.Series(univariate[1]) # p-value
+	univariate.index = X_train.columns
+	univariate.sort_values(ascending=False, inplace=True)
 
 	``` 
 	- Reminder, the lower the p-value, the most predictive the feature is in principle. There are a few features that do not seem to have predictive power according to the tests, which are those values on the left with p-values above 0.05 (rejected). Those features with p-value > 0.05 are not important. However, `keep in mind that this test assumes a linear relationship, so it might also be the case that the feature is related to the target bit not in a linear manner`.
@@ -513,7 +516,8 @@
 	- In big datasets, it's not unusual that the p-values of the different features are really small. This does not indicate much about the relevance of the feature to the target though. Mostly, it indicates that it's a big dataset.
 
 	```python
-	# select top 10th percentile or top 10, 20 features by using ANOVA in combination with `SelectKBest` or `SelectPercentile` from sklearn.
+	# select top 10th percentile or top 10, 20 features by using ANOVA 
+	# in combination with `SelectKBest` or `SelectPercentile` from sklearn.
 
 	sel = SelectKBest(f_classif, k=10).fit(X_train.fillna(0), y_train)
 	X_train.columns[sel.get_support()]
