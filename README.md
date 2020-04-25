@@ -767,6 +767,81 @@
 		- univariate roc-auc helped improving the performance of logistic regression.	
 		
 
+- **Bonus: Method used in KDD'09 competition**:
+	- The task is to predict churn based on a dataset with a huge number of features.
+	- This is an aggressive non-parametric feature selection procedure, which is based in contemplating the relationship between the feature and the target as a filter methods.
+
+	- **Procedure**:
+		- For each categorical variable:
+			1. Separate into train test.
+			2. Determine the `mean value` of the `target` `within each label` of the `categorical variable` using the `train` set.
+			3. Use that `mean target value per label as the prediction` in the `test` set and `calculate the roc-auc`.
+
+		- For each numerical variable:
+			1. Separate into train test.
+			2. Divide the variable into 100 quantiles.
+			3. Calculate the mean target within each quantile using the train set.
+			4. Use the mean target value (bin) as the prediction on the test set and calculate the roc-auc.
+
+	- **Advantages of the method**:
+		- Speed: computing mean and quantiles is direct and efficient.
+		- Stability respect to scale: extreme values for continuous variables do not skew the predictions.
+		- Comparable between categorical and numerical variables.
+		- Accommodation of non-linearities.
+
+	- **Implementation**:
+		```python
+		# 1. load titanic dataset
+		# 2. variable preprocessing
+		## cabin feature contains missing value, replacing by "Missing"
+		## to narrow down the different cabins by selecting first letter
+		## which represents where the cabin was located.
+		data['Cabin'].fillna("Missing", inplace=True)
+		data['Cabin'] = data['Cabin'].str[0]
+		## output: ['M', 'C', 'E', 'G', 'D', 'A', 'B', 'F', 'T']
+		# 3. split data into train test
+		# 4. feature selection on categorical variables
+		## cat_feats = ['Sex','Pclass','Cabin','Embarked']
+		```
+		- Calculate the mean of target 'Survival' (equivalent to the probability of survival) of the passenger, within each label of a categorical variable. Using a dictionary and train set that maps each label of the train set variable, to a probability of survival.
+
+		- Then the function replaces the label in both train and test sets by the probability of survival. It's like making a prediction on the outcome, by using only the label of the variable. This way, the function replaces the original strings by probabilities.
+
+		- **Take-away**:
+			- We use just the label of the variable to estimate the probability of survival of the passenger.
+			- It's like "Tell me which one was your cabin, I will tell you your probability of survival."
+
+		- If the labels of a categorical variable are good predictors, then, we should obtain a roc-auc above 0.5 for that variable, when we evaluate those probabilities with the real outcome, which is whether the passenger is survived or not.
+
+		```python
+		def mean_encoding(dftrain, dftest, cat_cols=[]):
+			dftrain_tem, dftest_tem = dftrain.copy(), dftest.copy()
+			for col in cat_cols:
+				# dictionary mapping labels/categories to the 
+				# mean target of that label.
+				risk_dict = dftrain.groupby([col])['Survived'].mean().to_dict()
+				# re-map the labels
+				dftrain_tem[col] = dftrain[col].map(risk_dict)
+				dftest_tem[col] = dftest[col].map(risk_dict)
+			
+			# drop the target
+			dftrain_tem.drop(['Survived'], axis=1, inplace=True)
+			dftest_tem.drop(['Survived'], axis=1, inplace=True)
+			return dftrain_tem, dftest_tem
+		## X_train_enc, X_test_enc = mean_encoding(X_train, X_test, cat_cols=['Sex', 'Cabin', 'Embarked', 'Cabin'])
+		```   
+
+		- Now, calculate a roc-auc value, using the probabilities that replace the labels in the encoded test set, and comparing it with the true target.
+
+		```python
+		roc_vals = []
+		for feat in cat_cols:
+			roc_vals.append(roc_auc_score(y_test, X_test_enc[feat]))
+		```
+
+		
+
+
 ## Section 6: Wrapper methods
 
 ## Section 7: Embedded methods | Lasso regulization
