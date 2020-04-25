@@ -592,11 +592,177 @@
 
 - **Take-away notes**: Use this method in the projects, particularly when we have an enormous amount of features and need to reduce the feature space quickly. [A usecase at pydata London](https://www.youtube.com/watch?v=UHtAjLYgDQ4). 
 
+- **Filter methods**:
+	```python
+	# libraries
+	from sklearn.model_selection import train_test_split
+	from sklearn.feature_selection import VarianceThreshold
+	from sklearn.preprocessing import StandardScaler
+	from sklearn.linear_model import LogisticRegression
+	from sklearn.ensemble import RandomForestClassifier
+	from sklearn.tree import DecisionTreeClassifier
+	from sklearn.metrics import roc_auc_score
+	#
+	import pandas as pd
+	import numpy as np
+	import seaborn as sns
+	import matplotlib.pyplot as plt
+	%matplotlib inline
+	
+	# 1. get data
+	data = pd.read_csv(pathfile)
+	
+	# 2. split data
+	X_train, X_test, y_train, y_test = train_test_split(
+		data.drop(labels=['target'], axis=1),
+		data['target'], test_size=0.3, random_state=0)
+	X_train_org, X_test_org = X_train.copy(), X_test.copy()
 
+	#### Basic filter
+	# 3. Remove constant 
+	constant_feats = [feat for feat in X_train.columns if X_train[feat].std()==0]
+	X_train.drop(labels=constant_feats, axis=1, inplace=True)
+	X_test.drop(labels=constant_feats, axis=1, inplace=True)
 
+	# 4. Remove quasi-constant 
+	sel = VarianceThreshold(threshold=0.01) 
+	sel.fit(X_train)
+	# remove quasi-constant features
+	X_train = sel.transform(X_train)
+	X_test = sel.transform(X_test)
 
+	# 5. Remove duplicated features
+	duplifeats = []
+	for i in range(len(X_train.columns)):
+		if i%10==0: print(i)
+		col_1 = X_train.columns[i]
+		for col_2 in X_train.columns[i+1:]:
+			if X_train[col_1].equals(X_train[col_2]):
+				duplifeats.append(col_2)
+	X_train.drop(labels=duplifeats, axis=1, inplace=True)
+	X_test.drop(labels=duplifeats, axis=1, inplace=True)
+	
+	X_train_basic, X_test_basic = X_train.copy(), X_test.copy()
 
+	# 6. Remove correlated features
+	def correlation(data, threshold):
+		col_corr = set() # all correlated columns.
+		corr_mat = data.corr()
+		for i in range(len(corr_mat.columns)):
+			for j in range(i):
+				if abs(corr_mat.iloc[i,j])> threshold:	
+					colname = corr_matrix.columns[i]
+					col_corr.add(colname)
+		return col_corr
+	corr_feats = correlation(X_train, 0.8)
+	X_train.drop(labels=corr_feats, axis=1, inplace=True)
+	X_test.drop(labels=corr_feats, axis=1, inplace=True)
+	X_train_corr, X_test_corr = X_train.copy(), X_test.copy()
 
+	# 7. Remove features using univariate ROC_AUC.
+	## loop to build a tree, make predictions and get the ROC-AUC 
+	## for each feature of the trainset.
+	roc_vals = []
+	for feat in X_train.columns:
+		clf = DecisionTreeClassifier()
+		clf.fit(X_train[feat].fillna(0).to_frame(), y_train)
+		y_scored = clf.predict_proba(X_test[feat].fillna(0).to_frame())
+		roc_vals.append(roc_auc_score(y_test, y_scored[:,1]))
+	roc_vals = pd.Series(roc_vals)
+	roc_vals.index = X_train.columns
+	selected_feats = roc_vals[roc_vals>0.5]
+
+	# 8. Compare the performance in machine learning algorithms
+	def run_randomForests(X_train, X_test, y_train, y_test):
+		clf_rf = RandomForestClassifier(n_estimators=200, random_state=39, max_depth=4)
+		clf_rf.fit(X_train, y_train)
+		pred = clf_rf.predict_proba(X_train)
+		print("Train RF roc-auc: ", roc_auc_score(y_train, pred[:,1]))
+		pred = clf_rf.predict_proba(X_test)
+		print("Test RF roc-auc: ", roc_auc_score(y_test, pred[:,1]))
+
+	run_randomForests(X_train_org.drop(labels=['ID'], axis=1),
+					X_test_org.drop(labels=['ID'], axis=1),
+					y_train, y_test)
+		Train set
+		Random Forests roc-auc: 0.8012314741948454
+		Test set
+		Random Forests roc-auc: 0.7900499757912425
+
+	run_randomForests(X_train_basic.drop(labels=['ID'], axis=1),
+					X_test_basic.drop(labels=['ID'], axis=1),
+					y_train, y_test)
+		Train set
+		Random Forests roc-auc: 0.8016577097093865
+		Test set
+		Random Forests roc-auc: 0.791033019265853
+
+	run_randomForests(X_train_corr.drop(labels=['ID'], axis=1),
+					X_test_corr.drop(labels=['ID'], axis=1),
+					y_train, y_test)
+		Train set
+		Random Forests roc-auc: 0.8073914001626228
+		Test set
+		Random Forests roc-auc: 0.7937667747098247
+
+	run_randomForests(X_train[selected_feats.index],
+					X_test_corr[selected_feats.index],
+					y_train, y_test)
+		Train set
+		Random Forests roc-auc: 0.8105671870819526
+		Test set
+		Random Forests roc-auc: 0.7985492537265694
+	```
+	- **Observation**: After removing constant, quasi-constant, duplicated, correlated features, now univariate roc-auc = `0.5`. We enhanced the performance after reducing the feature space from 371 to 90.
+
+	- **Regression**
+	```python
+	def run_logistic(X_train, X_test, y_train, y_test):
+		logit = LogisticRegression(random_state=44)
+		logit.fit(X_train, y_train)
+		pred = logit.predict_proba(X_train)
+		print("Train Logistic roc-auc: ", roc_auc_score(y_train, pred[:,1]))
+		pred = logit.predict_proba(X_test)
+		print("Test Logistic roc-auc: ", roc_auc_score(y_test, pred[:,1]))
+
+	scaler = StandardScaler().fit(X_train_org.drop(labels=['ID'],axis=1))
+	
+	run_logistic(scaler.transform(X_train_org.drop['ID'], axis=1),
+				scaler.transform(X_test_org.drop['ID'], axis=1),
+				y_train, y_test)
+
+		Train set
+		Logistic Regression roc-auc: 0.8068058675730494
+		Test set
+		Logistic Regression roc-auc: 0.7948755847784289
+
+	run_logistic(scaler.transform(X_train_basic.drop(labels=['ID'], axis=1)), scaler.transform(X_test_basic.drop(labels=['ID'], axis=1)), y_train, y_test)
+		Train set
+		Logistic Regression roc-auc: 0.8057765181239191
+		Test set
+		Logistic Regression roc-auc: 0.7951930873302437
+
+	run_logistic(scaler.transform(X_train_corr.drop(labels=['ID'], axis=1)), scaler.transform(X_test_corr.drop(labels=['ID'], axis=1)),
+				y_train, y_test)
+
+		Train set
+		Logistic Regression roc-auc: 0.7966160581765025
+		Test set
+		Logistic Regression roc-auc: 0.7931114290523482
+
+	run_logistic(scaler.transform(X_train[selected_feats.index]),
+				scaler.transform(X_test[selected_feats.index]),
+				y_train, y_test)
+
+		Train set
+		Logistic Regression roc-auc: 0.7930113686469875
+		Test set
+		Logistic Regression roc-auc: 0.7947741568815442
+
+	```
+	- **Observation:**
+		- univariate roc-auc helped improving the performance of logistic regression.	
+		
 
 ## Section 6: Wrapper methods
 
