@@ -727,7 +727,7 @@
 
 	scaler = StandardScaler().fit(X_train_org.drop(labels=['ID'],axis=1))
 	
-	run_logistic(scaler.transform(X_train_org.drop['ID'], axis=1),
+	run_logistic(scaler.transform(X_train_org.drop['ID'], axis=1),\
 				scaler.transform(X_test_org.drop['ID'], axis=1),
 				y_train, y_test)
 
@@ -736,13 +736,15 @@
 		Test set
 		Logistic Regression roc-auc: 0.7948755847784289
 
-	run_logistic(scaler.transform(X_train_basic.drop(labels=['ID'], axis=1)), scaler.transform(X_test_basic.drop(labels=['ID'], axis=1)), y_train, y_test)
+	run_logistic(scaler.transform(X_train_basic.drop(labels=['ID'], axis=1)), \
+	scaler.transform(X_test_basic.drop(labels=['ID'], axis=1)), y_train, y_test)
 		Train set
 		Logistic Regression roc-auc: 0.8057765181239191
 		Test set
 		Logistic Regression roc-auc: 0.7951930873302437
 
-	run_logistic(scaler.transform(X_train_corr.drop(labels=['ID'], axis=1)), scaler.transform(X_test_corr.drop(labels=['ID'], axis=1)),
+	run_logistic(scaler.transform(X_train_corr.drop(labels=['ID'], axis=1)), \
+		scaler.transform(X_test_corr.drop(labels=['ID'], axis=1)),
 				y_train, y_test)
 
 		Train set
@@ -750,7 +752,8 @@
 		Test set
 		Logistic Regression roc-auc: 0.7931114290523482
 
-	run_logistic(scaler.transform(X_train[selected_feats.index]),
+	run_logistic(scaler.transform(X_train[selected_feats.index]),\
+
 				scaler.transform(X_test[selected_feats.index]),
 				y_train, y_test)
 
