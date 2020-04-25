@@ -452,7 +452,8 @@
 
 	## calculate the chi-square (chi2) p_value between each of the variables and the target.
 	## It returns two arrays, 
-	## one contains the F-Scores which are then evaluated against the chi-square (chi2) distribution to obtain the p-value.
+	## one contains the F-Scores which are then evaluated against 
+	## the chi-square (chi2) distribution to obtain the p-value.
 	## the second array are p-values.
 	f_score = chi2(X_train.fillna(0), y_train)
 	p_values = pd.Series(f_score[1])
@@ -557,6 +558,45 @@
 	- Selects the features with the highest machine learning metrics.
 		
 	- Notes: It is perhaps the most powerful but it also has the weakness that it does not foresee feature redundancy. In an extreme example, duplicated features will show the same roc-auc and therefore both will be kept. Where should we put the threshold to select or remove features when using this method? roc-auc = 0.5 means random, therefore, all features with roc-auc that equal to 0.5 could be removed. We also want to remove those features with a low roc-auc the values for example 0.55. For the RMSE or MSE, you could select the cut off above the mean cut off of all the features. Sklean implements the default cutoff for feature selection.
+
+
+- **How it works**:
+	- First, it builds one decision tree per feature, to predict the target.
+	- Second, it makes predictions using the decision tree and the feature.
+	- Third, it ranks the features according to the ML metric (ROC-AUC or mse).
+	- Select the highest ranked features.
+
+	- **Implementation**:
+		- Note that it's good practice to select the features by examining only the training set in order to avoid overfit.
+
+		- *Classification*:
+		```python
+		# use bnp-paribas dataset
+		roc_vals = []
+		for feat in X_train.columns:
+			clf = DecisionTreeClassifier()
+			clf.fit(X_train[feat].fillna(0).to_frame(), y_train)
+			y_scored = clf.predict_proba(X_test[feat].fillna(0).to_frame())
+			roc_vals.append(roc_auc_score(y_test, y_scored[:,1]))
+		```
+		```python
+		rocvals = pd.Series(roc_vals)
+		rocvals.index = X_train.columns
+		rocvals.sort_values(ascending=False)
+		# number of features shows a roc-auc value higher than random.
+		len(rocvals[rocvals>0.5])
+		```
+		- Output: 98 out of 112 features show a predictive performance higher than 0.5. That means we can remove 14 feats from 112 feats. Using cross validation with sklearn to get a more accurate measure of the roc-auc per feature.
+
+		- *Regression*: do the same with `DecisionTreeRegressor()` and mse metric `mean_squared_error(y_test, y_scored)` and append to the list `mse_vals`. Remember for regression, the smaller the mse, the better the model performance is. Therefore, the top of features will be in an increasing order of the sorted list. Also considering the cutoff is depending on how many features you would like to end up with.
+
+- **Take-away notes**: Use this method in the projects, particularly when we have an enormous amount of features and need to reduce the feature space quickly. [A usecase at pydata London](https://www.youtube.com/watch?v=UHtAjLYgDQ4). 
+
+
+
+
+
+
 
 ## Section 6: Wrapper methods
 
