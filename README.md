@@ -790,6 +790,9 @@
 		- Accommodation of non-linearities.
 
 	- **Implementation**:
+		
+		- **Categorical variables**:
+		
 		```python
 		# 1. load titanic dataset
 		# 2. variable preprocessing
@@ -803,6 +806,7 @@
 		# 4. feature selection on categorical variables
 		## cat_feats = ['Sex','Pclass','Cabin','Embarked']
 		```
+
 		- Calculate the mean of target 'Survival' (equivalent to the probability of survival) of the passenger, within each label of a categorical variable. Using a dictionary and train set that maps each label of the train set variable, to a probability of survival.
 
 		- Then the function replaces the label in both train and test sets by the probability of survival. It's like making a prediction on the outcome, by using only the label of the variable. This way, the function replaces the original strings by probabilities.
@@ -834,13 +838,93 @@
 		- Now, calculate a roc-auc value, using the probabilities that replace the labels in the encoded test set, and comparing it with the true target.
 
 		```python
+		cat_cols=['Sex', 'Cabin', 'Embarked', 'Cabin']
 		roc_vals = []
 		for feat in cat_cols:
 			roc_vals.append(roc_auc_score(y_test, X_test_enc[feat]))
-		```
-
 		
+		# result of roc_vals
+			Sex         0.771667
+			Cabin       0.641637
+			Cabin       0.641637
+			Embarked    0.577500
+		```
+		- **Observation**:
+			- All the features are important because roc-auc > 0.5.
+			- Feature 'Sex' seems to be the most important feature to predict the target ('Survival').
 
+		- **Numerical variables**:
+			- The procedure is the same as for categorical variables, but it requires an additional first step which is to divide the continuous variables into bins.
+			- In this work, the authors divided into 100 quantiles, meaning 100 bins.
+			- The numerical variables in titanic dataset are `Age` and `Fare`.
+			
+			```python
+			# 1. get data, split data into train test.
+			
+			# 2. use the `qcut` (quantile cut) function from pandas 
+			# with 9 cutting points, meaning 10 bins.
+			# retbins=True indicates we want to capture the limits of 
+			# each interval for use to cut the test set.
+
+			# 3. create 10 labels, one for each quantile
+			# instead of having the quantile limits, the new variable will
+			# have labels in its bins.
+
+			labels = ['Q' + str(i+1) for i in range(10)]
+			X_train['Age_binned'], intervals = pd.qcut(
+					X_train['Age'],
+					10,
+					labels=labels,
+					retbins=True,
+					precision=3,
+					duplicates='drop')
+			# notes: Since `Age` contains missing values, its length is 11.
+
+			# output of X_train.Age_binned.unique()
+				[Q10, Q9, Q1, NaN, Q4, ..., Q6, Q2, Q7, Q5, Q8]
+
+			# these are the cutting points of the intervals.
+				[  0.67,  13.1 ,  19.  ,  22.  ,  25.4 ,  29.  ,  32.  ,
+				36.  , 41.  ,  49.  ,  80.  ]
+
+			# now use the boundaries calculated in the previous cell to bin the testing set.
+				X_test['Age_binned'] = pd.cut(x = X_test['Age'],
+												bins=intervals,
+												labels=labels)
+			# we see the NAN values in both X_train and X_test, 
+			# replace the NAN values by a new category called "Missing"
+			# first, recast variables as objects, then replacing missing
+			# values with a new category.
+
+			for df in [X_train, X_test]:
+				df['Age_binned'] = df['Age_binned'].astype('O')
+				df['Age_binned'].fillna('Missing', inplace=True)
+
+			# Now create a dict that maps the bins to the mean of target.
+			risk_dict = X_train.groupby(['Age_binned'])['Survived'].mean().to_dict()
+
+			# re-map the labels, replace the bins by the probabilities of survival.
+			for df in [X_train, X_test]:
+				df['Age_binned'] = df['Age_binned'].map(risk_dict)
+
+			# finally, calculate the roc-auc value, using the probabilities
+			# that replace the labels, and compare it with the true target.
+			roc_auc_score(y_test, X_test['Age_binned'])
+			
+			# output: 
+				0.57238095238095243
+
+			# This is higher than 0.5, in principle, `Age` has some 
+			# predictive power even though it seems worse than 
+			# any of categorical variables we evaluated.
+
+			```
+			
+			- Feature `Fare` can be done the same way.
+			```python
+			
+
+			```
 
 ## Section 6: Wrapper methods
 
