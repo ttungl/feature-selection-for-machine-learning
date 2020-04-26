@@ -978,8 +978,28 @@
 				- However, when we divide a numerical variable into quantile bins, we guarantee that each bin shows the same percentage of observations.
 				- Alternatively, instead of binning into quantiles, we can bin into equal-distance bins by calculating the max value - min value range and divide that distance into the amount of bins we want to construct. That would determine the cut-points for the bins.
 
-
 ## Section 6: Wrapper methods
+
+### Step forward feature selection
+- Sequential feature selection algorithms are a family of greedy search algorithms that are used to reduce an initial d-dimensional feature space to a k-dimensional feature subspace where `k < d`.
+
+
+### Step forward feature selection
+
+### Exhaustive feature selection
+
+### Additional resources
+1. Articles
+	- [Least angle and l1 penalised regression: A review](https://projecteuclid.org/download/pdfview_1/euclid.ssu/1211317636)
+	- [Penalised feature selection and classification in bioinformatics](https://www.ncbi.nlm.nih.gov/pubmed/18562478)
+	- [Feature selection for classification: A review](https://web.archive.org/web/20160314145552/http://www.public.asu.edu/~jtang20/publication/feature_selection_for_classification.pdf)
+
+2. Blog: [Machine Learning Explained: Regularization](https://www.r-bloggers.com/machine-learning-explained-regularization/)
+
+3. [Online course](https://see.stanford.edu/materials/aimlcs229/cs229-notes5.pdf).
+
+
+
 
 ## Section 7: Embedded methods | Lasso regulization
 
