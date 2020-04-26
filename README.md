@@ -973,7 +973,7 @@
 			```
 			- The output indicates that `Fare` feature is a much better predictor of Survival.
 
-			_ **Notes**:
+			- **Notes**:
 				- Keep in mind that the categorical variables may or may not (typically will not) show the same percentage of observations per label.
 				- However, when we divide a numerical variable into quantile bins, we guarantee that each bin shows the same percentage of observations.
 				- Alternatively, instead of binning into quantiles, we can bin into equal-distance bins by calculating the max value - min value range and divide that distance into the amount of bins we want to construct. That would determine the cut-points for the bins.
