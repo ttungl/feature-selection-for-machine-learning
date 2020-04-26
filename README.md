@@ -922,9 +922,62 @@
 			
 			- Feature `Fare` can be done the same way.
 			```python
+			labels = ['Q' + str(i) for i in range(10)]
+			# train
+			X_train['Fare_binned'], intervals = pd.qcut(
+				X_train.Fare,
+				10,
+				labels=labels,
+				retbins=True,
+				precision=3,
+				duplicates='drop')
+			# test
+			X_test['Fare_binned'] = pd.cut(
+				x = X_test.Fare,
+				bins=intervals,
+				labels=labels)
+			# check if X_test, X_train has missing values, if so, add dtype=object.
+			X_test['Fare_binned'].isnull().sum(), X_train['Fare_binned'].isnull().sum()
+
+			# parse as categorical values.
+			for df in [X_train, X_test]:
+				df['Fare_binned'] = df['Fare_binned'].astype('O')
 			
+			# create dictionary that maps the bins to the mean of target.
+			risk_dict = X_train.groupby(['Fare_binned'])['Survived'].mean().to_dict()
+
+			# then re-map the labels, replace the bins by the probabilities of survival.
+			for df in [X_train, X_test]:
+				df['Fare_binned'] = df['Fare_binned'].map(risk_dict)
+
+			# output of X_train['Fare_binned'].head()
+				857    0.492063
+				52     0.533333
+				386    0.354839
+				124    0.730159
+				578    0.396825
+
+			# calculate a roc-auc value, using the probabilities that
+			# we used to replace the labels, and compare it to the 
+			# true target.
+
+			# estimate all missing values in X_test to be zero.
+			X_test['Fare_binned'].fillna(0, inplace=True)
+
+			# calculate roc-auc
+			roc_auc_score(y_test, X_test['Fare_binned'])
+
+			# output:
+				0.72538690476190471
 
 			```
+			- The output indicates that `Fare` feature is a much better predictor of Survival.
+
+			_ **Notes**:
+				- Keep in mind that the categorical variables may or may not (typically will not) show the same percentage of observations per label.
+				- However, when we divide a numerical variable into quantile bins, we guarantee that each bin shows the same percentage of observations.
+				- Alternatively, instead of binning into quantiles, we can bin into equal-distance bins by calculating the max value - min value range and divide that distance into the amount of bins we want to construct. That would determine the cut-points for the bins.
+
 
 ## Section 6: Wrapper methods
 
