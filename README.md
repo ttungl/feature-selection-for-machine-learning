@@ -1086,8 +1086,8 @@
 			β = (y - λ/2x) / x
 	```
 
-	- When $\lambda$ increases, more features coefficients will be zeros and therefore it reduces the variance but increases the bias. When it's small, it tends to be a high variance. In theory, when $\lambda$=inf, all coefficients are zeros, and therefore all predictors are dropped.
-	- In Ridge regularization (with a `l2`-penalty term beta-squared), it can only shrink coefficients close to zeros, but not zeros. This is because when we take the derivatives w.r.t. beta in the ridge regression, the lambda will be in denominator [(reference-ridge)](https://stats.stackexchange.com/questions/176599/why-will-ridge-regression-not-shrink-some-coefficients-to-zero-like-lasso). Therefore the value of beta will be as low as possible but not zero.
+	- When `lambda` increases, more features coefficients will be zeros and therefore it reduces the variance but increases the bias. When it's small, it tends to be a high variance. In theory, when `lambda`=inf, all coefficients are zeros, and therefore all predictors are dropped.
+	- In Ridge regularization (with a `l2`-penalty term beta-squared), it can only shrink coefficients close to zeros, but not zeros. This is because when we take the derivatives w.r.t. beta in the ridge regression, the `lambda` will be in denominator [(reference-ridge)](https://stats.stackexchange.com/questions/176599/why-will-ridge-regression-not-shrink-some-coefficients-to-zero-like-lasso). Therefore the value of `beta` will be as low as possible but not zero.
 	```python
 		
 		L2-penalty = (y-∑xβ)^2 + λ∑βi^2
