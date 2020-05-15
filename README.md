@@ -1069,7 +1069,7 @@
 	- Lasso (a.k.a `l1`-penalty with beta-absolute/norm) has the property that is able to shrink coefficients to zeros, therefore, some features can be removed from the model. This helps Lasso to be fit for feature selection. 
 	```python
 		
-		L1-penalty = (y-∑xβ)^2+λ∑|βi|
+		L1-penalty = (y-∑xβ)^2 + λ∑|βi|
 		
 		y^2- 2xyβ + x^2 β^2 + λβ = 0
 
@@ -1090,7 +1090,7 @@
 	- In Ridge regularization (with a `l2`-penalty term beta-squared), it can only shrink coefficients close to zeros, but not zeros. This is because when we take the derivatives w.r.t. beta in the ridge regression, the lambda will be in denominator [(reference-ridge)](https://stats.stackexchange.com/questions/176599/why-will-ridge-regression-not-shrink-some-coefficients-to-zero-like-lasso). Therefore the value of beta will be as low as possible but not zero.
 	```python
 		
-		L2-penalty = (y-∑xβ)^2+λ∑βi^2
+		L2-penalty = (y-∑xβ)^2 + λ∑βi^2
 		
 		y^2- 2xyβ + x^2 β^2 + λβ^2 = 0
 
