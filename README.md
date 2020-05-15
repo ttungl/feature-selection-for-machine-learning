@@ -1024,14 +1024,14 @@
     pred = rf.predict_proba(X_test)
     print('Random Forests roc-auc: {}'.format(roc_auc_score(y_test, pred[:,1])))
     ## output: 
-	    ## Train set
-		## Random Forests roc-auc: 0.716244551855826
-		## Test set
-		## Random Forests roc-auc: 0.7011551996870431
+    ## Train set
+	## Random Forests roc-auc: 0.716244551855826
+	## Test set
+	## Random Forests roc-auc: 0.7011551996870431
 	``` 
 
 	- For regression problems:
-		- Basically, the process will be the same as in classification method, but we will change the scoring in SFS to be `r2`.
+		- Basically, the process will be the same as in classification method, but we will change the scoring method in SFS to be `r2`.
 
 ### Step backward feature selection
 
