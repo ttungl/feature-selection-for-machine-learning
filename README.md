@@ -1034,9 +1034,9 @@
 		- Basically, the process will be the same as in classification method, but we will change the scoring method in SFS to be `r2`.
 
 ### Step backward feature selection
-
-
-
+- This method starts by fitting a model using all features. Then it removes one feature that produces the highest performing algorithm for a certain evaluation criteria. In the second step, it will remove a second feature that also produces the best performing algorithm, the process continues until a certain criteria is met.
+- The selection procedure is called greedy, because it evaluates all `n` possible features.
+- The procedure are the same as in the step forward feature selection, except we replace by `forward=False` in the `SFS`.
 
 ### Exhaustive feature selection
 - In an exhaustive feature selection, the best subset of features is selected by optimizing a specified performance metric for a certain ML algorithm. For example, if the classifier is a logistic regression, and the dataset has 4 features, the algorithm will evaluate all 15 feature combinations as follows:
@@ -1051,7 +1051,6 @@
 - There is a special package for python that implements this type of feature selection: `mlxtend`. This method is the exhaustive feature selection, the stopping criteria is an arbitrarily set number of features. So the search will finish when we reach the desired number of selected features.
 
 - **Notes**: it's computationally expensive. Not use unless you run it on a cloud cluster.
-
 
 ### Additional resources
 1. Articles
