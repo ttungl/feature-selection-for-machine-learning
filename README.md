@@ -983,10 +983,75 @@
 ### Step forward feature selection
 - Sequential feature selection algorithms are a family of greedy search algorithms that are used to reduce an initial d-dimensional feature space to a k-dimensional feature subspace where `k < d`.
 
+- This method starts by evaluating all features individually and selects the one that generates the best performing algorithm, according to a pre-set evaluation criteria. In the second step, it evaluates all possible combinations of the selected feature and a second feature, then selects the pair that produces the best performance.
 
-### Step forward feature selection
+- The pre-set criteria can be the roc_auc for classification and the r-squared for regression for example. 
+
+- This method is called greedy due to evaluating all possible features combinations. So it's quite expensive in terms of time and space complexity.
+
+- Use a special package `mlxtend` that implements this type of feature selection.
+	- The stopping criteria is an arbitrarily set number of features. So the search will finish when we reached this upper bound.
+- We use the step forward feature selection method from `mlxtend` library.
+	- For classification problems:
+
+	```python
+	from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+	from sklearn.metrics import roc_auc_score
+	## Notes: feature selection should be done after data preprocessing.
+	# 0. convert categorical vars into numbers, get all numerical variables.
+	# 1. split data.
+	# 2. collect correlated features from `.corr()` with a `threshold`(=0.8).
+	# 3. drop correlated features.
+	# 4. depend on which type of problems in order to apply the model properly.
+	# 5. fit the model.
+	clf_sfs = SFS(RandomForestClassifier(n_jobs=4), 
+					k_features=10, 
+					forward=True,
+					floating=False,
+					verbose=2,
+					scoring='roc_auc', 
+					cv=3 )
+	clf_sfs = clf_sfs.fit(np.array(X_train.fillna(0)), y_train)
+	
+	selected_feats = X_train.columns[list(clf_sfs.k_feature_idx_)]
+
+	rf = RandomForestClassifier(n_estimators=200, random_state=39, max_depth=4)
+	rf.fit(X_train, y_train)
+	print('Train set')
+    pred = rf.predict_proba(X_train)
+    print('Random Forests roc-auc: {}'.format(roc_auc_score(y_train, pred[:,1])))
+    print('Test set')
+    pred = rf.predict_proba(X_test)
+    print('Random Forests roc-auc: {}'.format(roc_auc_score(y_test, pred[:,1])))
+    ## output: 
+	    ## Train set
+		## Random Forests roc-auc: 0.716244551855826
+		## Test set
+		## Random Forests roc-auc: 0.7011551996870431
+	``` 
+
+	- For regression problems:
+		- Basically, the process will be the same as in classification method, but we will change the scoring in SFS to be `r2`.
+
+### Step backward feature selection
+
+
+
 
 ### Exhaustive feature selection
+- In an exhaustive feature selection, the best subset of features is selected by optimizing a specified performance metric for a certain ML algorithm. For example, if the classifier is a logistic regression, and the dataset has 4 features, the algorithm will evaluate all 15 feature combinations as follows:
+	- All combinations of 1 feat.
+	- All combinations of 2 feats.
+	- All combinations of 3 feats.
+	- All 4 feats.
+- Then select the one that results in the best performance (i.e. accuracy) of the logistic regression classifier.
+
+- This is quite computationally expensive and unfeasible if feature space is big.
+
+- There is a special package for python that implements this type of feature selection: `mlxtend`. This method is the exhaustive feature selection, the stopping criteria is an arbitrarily set number of features. So the search will finish when we reach the desired number of selected features.
+
+- **Notes**: it's computationally expensive. Not use unless you run it on a cloud cluster.
+
 
 ### Additional resources
 1. Articles
