@@ -1063,9 +1063,28 @@
 3. [Online course](https://see.stanford.edu/materials/aimlcs229/cs229-notes5.pdf).
 
 
-
-
 ## Section 7: Embedded methods | Lasso regulization
+- Lasso regularization
+	- Adding a penalty to the model to reduce overfitting. In linear model regularization, the penalty is applied over the coefficients that multiply each of the predictors. 
+	- Lasso (a.k.a `l1`-penalty with beta-absolute/norm) has the property that is able to shrink coefficients to zeros, therefore, some features can be removed from the model. This helps Lasso to be fit for feature selection. 
+	- When $\lambda$ increases, more features coefficients will be zeros and therefore it reduces the variance but increases the bias. When it's small, it tends to be a high variance. In theory, when $\lambda$=inf, all coefficients are zeros, and therefore all predictors are dropped.
+	- In Ridge regularization (with a `l2`-penalty term beta-squared), it can only shrink coefficients close to zeros, but not zeros. This is because when we take the derivatives w.r.t. beta in the ridge regression, the lambda will be in denominator (ref-ridge)[https://stats.stackexchange.com/questions/176599/why-will-ridge-regression-not-shrink-some-coefficients-to-zero-like-lasso]. Therefore the value of beta will be as low as possible but not zero.
+	```python
+	L2 = (y-xβ)^2+λ∑βi^2
+	Y^2- 2xyβ+ x^2 β^2+ λβ^2=0
+	Partial derivatives w.r.t:
+
+		-2xy+2x^2β+2βλ=0
+
+		2β (x^2+λ) = 2xy
+
+		β= 2xy/ 2(x^2 + λ)
+
+		Finally,
+
+		β= xy/ (x^2 + λ)
+	```
+
 
 ## Section 8: Embedded methods | Linear models
 
