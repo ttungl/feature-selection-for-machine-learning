@@ -1123,13 +1123,67 @@
 		- Xs are independent.
 		- Xs are not correlated to each other (non-multi-collinearity).
 		- Xs are normally distributed (Gaussian distribution).
+		- Homoscedasticity (variance should be the same).
 		- For direct coefficient comparison Xs should be in the same scale, i.e. [0,1] or [-1,1].
 		- The magnitude of the coefficients is influenced by regulization and the scale of the features. Therefore, all features are within the same scale to compare coefficients across features using normalization.
+	- Another note is that Linear Regression model is fitted by matrix multiplication, not by gradient descent.
 
 - Logistic regression coefficients.
+	```
+	sel_ = SelectFromModel(LogisticRegression(C=1000, penalty='l2')) 
+	```
+	where C=1000 is set to obtain as much as possible the real relationship between the features and the target.
+	```
+	sel_.get_support()
+	```
+	to get the selected features. 
+	The `SelectFromModel()` will select those variables that their absolute coefficient values are greater than the mean coefficient value of all the variables.
 
 
 ## Section 9: Embedded methods | Trees
+- Feature selection by tree derived variable importance.
+	- Decision trees:
+		- Most popular machine learning algorithms.
+		- High accurate.
+		- Good generalization (low overfitting).
+		- Interpretability.
+		- Importance:
+			- Top layer: Highest impurity (all classes are mixed).
+			- Second layer: Impurity decreases.
+			- Third layer: Impurity continues to decrease, so on. 
+		- For classification, the impurity measurement is either to give any or the information gain or entropy.
+		- For regression, the impurity measurement is the variance.
+		- Therefore, when training a tree, it's possible to compute how much each feature decreases the impurity, in other words, how good the feature is at separating the classes. The more a feature decreases the impurity, the more important the feature is. Feature selectors at higher nodes lead to the greater gains and therefore the most important ones.
+
+	- Random Forests:
+		- Consist of several hundreds of individual decision trees.
+		- The impurity decreases for each feature is averaged across trees.
+		- Limitations:
+			- Correlated features show equal or similar importance.
+			- Correlated features importance is lower than the real importance, determined when tree is built in absence of correlated couterparts.
+			- Highly cardinal variables show greater importance (trees are biased to this type of variables).
+
+		- How it works:
+			- Build a random forest
+			- Determine feature importance
+			- Select the features with highest importance
+			- Use sklearn-enabled.
+
+		- Recursive feature elimination
+			- Build random forests
+			- Calculate feature importance
+			- Remove least important feature
+			- Repeat until a condition is met
+
+		- Note: If the feature removed is correlated to another feature in the dataset, then by removing the correlated feature, the true importance of the other feature will be verified by its incremental importance value (i.e. info gain).	
+	- Gradient Boosted trees feature importance:
+		- Feature importance calculated in the same way
+		- Biased to highly cardinal features.
+		- Importance is susceptible to correlated features.
+		- Interpretability of feature importance is not straight-forward.
+			- Later trees fit to the errors of the first trees, therefore the feature importance is not necessarily proportional on the influence of the feature on the outcome, rather than that on the low performance of previous trees.
+			- Averaging across trees may not add much information on true relation between feature and target.
+
 
 ## Section 10: Reading resources
 
