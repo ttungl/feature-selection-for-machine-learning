@@ -1110,6 +1110,16 @@
 
 ## Section 8: Embedded methods | Linear models
 
+- Regression coefficients
+	```
+	y = β0 + β1X1 + β2X2 + ... + βnXn
+	```
+	where β is the coefficient of the feature X. 
+		  βs are directly proportional to how much
+		  that feature contributes to the final value y.
+	  
+
+
 ## Section 9: Embedded methods | Trees
 
 ## Section 10: Reading resources
