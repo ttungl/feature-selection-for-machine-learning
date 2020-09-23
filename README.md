@@ -1117,7 +1117,16 @@
 	where β is the coefficient of the feature X. 
 		  βs are directly proportional to how much
 		  that feature contributes to the final value y.
-	  
+	
+	- Note that, coeffients in linear models depend on a few assumptions.
+		- Linear relationship between predictor (X) and outcome (Y).
+		- Xs are independent.
+		- Xs are not correlated to each other (non-multi-collinearity).
+		- Xs are normally distributed (Gaussian distribution).
+		- For direct coefficient comparison Xs should be in the same scale, i.e. [0,1] or [-1,1].
+		- The magnitude of the coefficients is influenced by regulization and the scale of the features. Therefore, all features are within the same scale to compare coefficients across features using normalization.
+
+- Logistic regression coefficients.
 
 
 ## Section 9: Embedded methods | Trees
